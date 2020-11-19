@@ -15,7 +15,10 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname,"public")));
 
 app.get('/',function(req,res){
-    res.render('index.ejs',{});
+    Usuario.find({}).exec(function(err,docs){
+        res.render('index.ejs',{Usuarios:docs});
+    })
+    
 });
 
 
@@ -39,7 +42,16 @@ app.post('/add', function(req,res){
     })
 });
 
-
+app.get('/del/:id', function(req,res){
+    Usuario.findByIdAndDelete(req.params.id,function(err){
+        if(err){
+            console.log(err)
+        }else{
+            res.redirect('/')
+        }
+    })
+    console.log(req.params.id)
+})
 app.listen(3000,function(){
     console.log("Conexão inicializada")
 });
